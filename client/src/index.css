@@ -1,0 +1,271 @@
+/* ============================================================
+   Multi-Market Live Monitor — Global Styles
+   Design: Quant Terminal (Deep Navy Dark)
+   Color System:
+     Background: #060b18 (deep navy black)
+     Surface: #0d1526 (card/panel)
+     Border: #1e2d4a (subtle divider)
+     Text Primary: #e8edf5 (cold white)
+     Text Muted: #6b7fa3 (slate)
+     Accent Blue: #0ea5e9 (sky blue)
+     Green (up/buy): #22c55e
+     Red (down/sell): #ef4444
+     Amber (warning): #f59e0b
+     Purple (signal): #a855f7
+   ============================================================ */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.25rem;
+  /* Deep Navy Dark Theme */
+  --background: oklch(0.08 0.02 240);
+  --foreground: oklch(0.92 0.01 220);
+  --card: oklch(0.11 0.025 240);
+  --card-foreground: oklch(0.92 0.01 220);
+  --popover: oklch(0.13 0.025 240);
+  --popover-foreground: oklch(0.92 0.01 220);
+  --primary: oklch(0.62 0.2 220);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.15 0.02 240);
+  --secondary-foreground: oklch(0.75 0.01 220);
+  --muted: oklch(0.14 0.02 240);
+  --muted-foreground: oklch(0.55 0.02 230);
+  --accent: oklch(0.18 0.03 240);
+  --accent-foreground: oklch(0.92 0.01 220);
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.22 0.03 240);
+  --input: oklch(0.18 0.025 240);
+  --ring: oklch(0.62 0.2 220);
+  --chart-1: oklch(0.62 0.2 220);
+  --chart-2: oklch(0.65 0.18 150);
+  --chart-3: oklch(0.62 0.22 25);
+  --chart-4: oklch(0.72 0.18 80);
+  --chart-5: oklch(0.65 0.18 290);
+  --sidebar: oklch(0.10 0.022 240);
+  --sidebar-foreground: oklch(0.92 0.01 220);
+  --sidebar-primary: oklch(0.62 0.2 220);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.16 0.025 240);
+  --sidebar-accent-foreground: oklch(0.92 0.01 220);
+  --sidebar-border: oklch(0.20 0.025 240);
+  --sidebar-ring: oklch(0.62 0.2 220);
+
+  /* Custom semantic colors */
+  --color-up: #22c55e;
+  --color-down: #ef4444;
+  --color-signal: #0ea5e9;
+  --color-warning: #f59e0b;
+  --color-third-buy: #a855f7;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+    font-size: 13px;
+  }
+  .font-mono, .tabular-nums {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  a[href] {
+    @apply cursor-pointer;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.28 0.03 240);
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.38 0.05 220);
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  /* Price colors */
+  .price-up { color: var(--color-up); }
+  .price-down { color: var(--color-down); }
+  .price-neutral { color: oklch(0.75 0.01 220); }
+
+  /* Signal strength bar */
+  .signal-bar {
+    height: 3px;
+    border-radius: 1px;
+    background: linear-gradient(to right, var(--color-signal), var(--color-third-buy));
+  }
+
+  /* Glow effects */
+  .glow-green {
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+  }
+  .glow-red {
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+  }
+  .glow-blue {
+    box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
+  }
+
+  /* Flash animation for price updates */
+  @keyframes flash-green {
+    0% { background-color: rgba(34, 197, 94, 0.15); }
+    100% { background-color: transparent; }
+  }
+  @keyframes flash-red {
+    0% { background-color: rgba(239, 68, 68, 0.15); }
+    100% { background-color: transparent; }
+  }
+  .flash-green { animation: flash-green 0.5s ease-out; }
+  .flash-red { animation: flash-red 0.5s ease-out; }
+
+  /* Toast slide in */
+  @keyframes toast-in {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  .toast-enter { animation: toast-in 0.25s ease-out; }
+
+  /* Panel header */
+  .panel-header {
+    @apply text-xs font-semibold tracking-widest uppercase;
+    color: oklch(0.55 0.02 230);
+    letter-spacing: 0.1em;
+  }
+
+  /* Watchlist row */
+  .watchlist-row {
+    @apply flex items-center gap-2 px-3 py-2 cursor-pointer transition-colors;
+    border-left: 2px solid transparent;
+  }
+  .watchlist-row:hover {
+    background: oklch(0.16 0.025 240);
+  }
+  .watchlist-row.active {
+    background: oklch(0.16 0.025 240);
+    border-left-color: oklch(0.62 0.2 220);
+  }
+
+  /* Timeframe button */
+  .tf-btn {
+    @apply px-2 py-1 text-xs rounded transition-colors;
+    color: oklch(0.55 0.02 230);
+    background: transparent;
+    border: 1px solid transparent;
+  }
+  .tf-btn:hover {
+    color: oklch(0.85 0.01 220);
+    background: oklch(0.16 0.025 240);
+  }
+  .tf-btn.active {
+    color: oklch(0.62 0.2 220);
+    background: oklch(0.14 0.04 220);
+    border-color: oklch(0.28 0.06 220);
+  }
+
+  /* Quote card */
+  .quote-card {
+    @apply p-3 rounded;
+    background: oklch(0.11 0.025 240);
+    border: 1px solid oklch(0.20 0.025 240);
+  }
+
+  /* Signal item */
+  .signal-item {
+    @apply px-3 py-2 border-b;
+    border-color: oklch(0.16 0.02 240);
+  }
+  .signal-item:last-child {
+    border-bottom: none;
+  }
+
+  /* Status dot */
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .status-dot.connected {
+    background: var(--color-up);
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+    animation: pulse-green 2s infinite;
+  }
+  .status-dot.delayed {
+    background: var(--color-warning);
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+  }
+  .status-dot.disconnected {
+    background: var(--color-down);
+  }
+
+  @keyframes pulse-green {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+}
