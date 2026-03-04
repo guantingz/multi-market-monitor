@@ -1,6 +1,7 @@
 // ============================================================
 // Multi-Market Live Monitor — Candlestick Chart
 // Uses lightweight-charts v5 for OHLC + Bollinger + MA + Chanlun
+// Includes: Zhongshu (中枢) box primitive drawn on chart
 // Design: Quant Terminal (Deep Navy Dark)
 //
 // MA Color System:
@@ -31,6 +32,7 @@ import {
 import { getRealKlines } from '@/lib/realDataAdapter';
 import { calcBollinger, computeIndicators, computeAllMA, MA_CONFIGS } from '@/lib/indicators';
 import { runChanlun } from '@/lib/chanlunEngine';
+import { ZhongshuPrimitive } from '@/lib/zhongshuPrimitive';
 import type { MarketType, Timeframe, OHLCBar } from '@/lib/types';
 import { useMarketContext } from '@/contexts/MarketContext';
 import {
@@ -60,6 +62,7 @@ export default function CandlestickChart({ symbol, market, timeframe, height = 3
   const middleBandRef = useRef<ISeriesApi<'Line'> | null>(null);
   const lowerBandRef = useRef<ISeriesApi<'Line'> | null>(null);
   const maSeriesRef = useRef<MASeriesMap>(new Map());
+  const zhongshuPrimitiveRef = useRef<ZhongshuPrimitive | null>(null);
   const barsRef = useRef<OHLCBar[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { indicators, addSignals } = useMarketContext();
@@ -106,6 +109,11 @@ export default function CandlestickChart({ symbol, market, timeframe, height = 3
       wickUpColor: '#22c55e',
       wickDownColor: '#ef4444',
     });
+
+    // Attach Zhongshu primitive to candlestick series
+    const zhongshuPrimitive = new ZhongshuPrimitive();
+    candleSeries.attachPrimitive(zhongshuPrimitive);
+    zhongshuPrimitiveRef.current = zhongshuPrimitive;
 
     // Bollinger bands
     const upperBand = chart.addSeries(LineSeries, {
@@ -162,6 +170,8 @@ export default function CandlestickChart({ symbol, market, timeframe, height = 3
 
     return () => {
       resizeObserver.disconnect();
+      // Detach primitive before removing chart
+      try { candleSeries.detachPrimitive(zhongshuPrimitive); } catch { /* ignore */ }
       chart.remove();
       chartRef.current = null;
       candleSeriesRef.current = null;
@@ -169,10 +179,11 @@ export default function CandlestickChart({ symbol, market, timeframe, height = 3
       middleBandRef.current = null;
       lowerBandRef.current = null;
       maSeriesRef.current = new Map();
+      zhongshuPrimitiveRef.current = null;
     };
   }, [height]);
 
-  // Load data
+  // Load data — re-runs when symbol, market, or timeframe changes
   useEffect(() => {
     let mounted = true;
     setIsLoading(true);
@@ -211,7 +222,6 @@ export default function CandlestickChart({ symbol, market, timeframe, height = 3
     for (const cfg of MA_CONFIGS) {
       const series = maSeriesRef.current.get(cfg.period);
       if (!series) continue;
-      // If maToggles exists use it; otherwise fall back to global indicators.ma
       const visible = maToggles
         ? (maToggles[cfg.period] ?? false)
         : (indicators.ma ?? false);
@@ -250,13 +260,20 @@ export default function CandlestickChart({ symbol, market, timeframe, height = 3
       series.setData(maData);
     }
 
-    // Chanlun markers
-    drawChanlunMarkers(newBars);
+    // Chanlun: markers + zhongshu boxes
+    drawChanlunOverlays(newBars);
   }
 
-  function drawChanlunMarkers(newBars: OHLCBar[]) {
+  function drawChanlunOverlays(newBars: OHLCBar[]) {
     if (!candleSeriesRef.current) return;
     const result = runChanlun(newBars, market, symbol, timeframe);
+
+    // Draw zhongshu boxes via primitive
+    if (zhongshuPrimitiveRef.current) {
+      zhongshuPrimitiveRef.current.setZhongshus(result.zhongshus);
+    }
+
+    // Draw third-buy markers
     if (result.thirdBuys.length > 0) {
       const markers: SeriesMarker<Time>[] = result.thirdBuys.map(tb => ({
         time: (tb.confirmTime ?? tb.pullbackTime ?? tb.breakoutTime) as Time,
@@ -287,6 +304,44 @@ export default function CandlestickChart({ symbol, market, timeframe, height = 3
 
   return (
     <div className="relative" style={{ background: 'oklch(0.10 0.022 240)', borderRadius: 4 }}>
+      {/* Zhongshu legend */}
+      <div
+        className="absolute top-2 left-2 z-10 flex items-center gap-3"
+        style={{ pointerEvents: 'none' }}
+      >
+        <div className="flex items-center gap-1.5">
+          <div
+            style={{
+              width: 12,
+              height: 10,
+              background: 'rgba(168,85,247,0.15)',
+              border: '1.5px solid rgba(168,85,247,0.7)',
+              borderRadius: 1,
+            }}
+          />
+          <span style={{ fontSize: 9, color: '#d8b4fe', fontFamily: 'JetBrains Mono, monospace' }}>
+            活跃中枢
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div
+            style={{
+              width: 12,
+              height: 10,
+              background: 'rgba(107,127,163,0.10)',
+              border: '1px dashed rgba(107,127,163,0.4)',
+              borderRadius: 1,
+            }}
+          />
+          <span style={{ fontSize: 9, color: '#6b7fa3', fontFamily: 'JetBrains Mono, monospace' }}>
+            历史中枢
+          </span>
+        </div>
+        <span style={{ fontSize: 9, color: '#4a5a7a', fontFamily: 'JetBrains Mono, monospace' }}>
+          {timeframe} 周期
+        </span>
+      </div>
+
       {isLoading && (
         <div
           className="absolute inset-0 flex items-center justify-center z-10"
