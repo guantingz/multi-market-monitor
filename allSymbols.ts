@@ -1,9 +1,9 @@
 // ============================================================
-// Multi-Market Live Monitor — All Available Symbols
-// Full tradeable symbol list for each market
+// Multi-Market Live Monitor — All Available Symbols (v2.0)
+// Optimized for: Comprehensive A-Share Coverage & Mapping Logic
 // ============================================================
 
-import type { MarketType } from './types';
+export type MarketType = 'fx' | 'cn' | 'hk' | 'us' | 'crypto' | 'commodities';
 
 export interface SymbolInfo {
   symbol: string;
@@ -11,149 +11,124 @@ export interface SymbolInfo {
   basePrice: number;
   volatility: number;
   market: MarketType;
+  category?: string; // 细分分类：如 'Index', 'Tech', 'ETF' 等
 }
+
+// ============================================================
+// 1. Full Market Symbols Data
+// ============================================================
 
 export const ALL_MARKET_SYMBOLS: Record<MarketType, SymbolInfo[]> = {
   fx: [
-    { symbol: 'EURUSD', name: 'Euro / US Dollar', basePrice: 1.0842, volatility: 0.003, market: 'fx' },
-    { symbol: 'GBPUSD', name: 'British Pound / USD', basePrice: 1.2634, volatility: 0.004, market: 'fx' },
-    { symbol: 'USDJPY', name: 'USD / Japanese Yen', basePrice: 149.82, volatility: 0.005, market: 'fx' },
-    { symbol: 'AUDUSD', name: 'Australian Dollar / USD', basePrice: 0.6521, volatility: 0.005, market: 'fx' },
-    { symbol: 'USDCNH', name: 'USD / Chinese Yuan', basePrice: 7.2415, volatility: 0.002, market: 'fx' },
-    { symbol: 'USDCAD', name: 'USD / Canadian Dollar', basePrice: 1.3612, volatility: 0.004, market: 'fx' },
-    { symbol: 'USDCHF', name: 'USD / Swiss Franc', basePrice: 0.8942, volatility: 0.003, market: 'fx' },
-    { symbol: 'NZDUSD', name: 'New Zealand Dollar / USD', basePrice: 0.6012, volatility: 0.005, market: 'fx' },
-    { symbol: 'EURGBP', name: 'Euro / British Pound', basePrice: 0.8582, volatility: 0.003, market: 'fx' },
-    { symbol: 'EURJPY', name: 'Euro / Japanese Yen', basePrice: 162.45, volatility: 0.006, market: 'fx' },
-    { symbol: 'GBPJPY', name: 'British Pound / Japanese Yen', basePrice: 189.32, volatility: 0.007, market: 'fx' },
-    { symbol: 'AUDJPY', name: 'Australian Dollar / Japanese Yen', basePrice: 97.82, volatility: 0.006, market: 'fx' },
-    { symbol: 'EURAUD', name: 'Euro / Australian Dollar', basePrice: 1.6612, volatility: 0.005, market: 'fx' },
-    { symbol: 'EURCHF', name: 'Euro / Swiss Franc', basePrice: 0.9682, volatility: 0.003, market: 'fx' },
-    { symbol: 'GBPCHF', name: 'British Pound / Swiss Franc', basePrice: 1.1282, volatility: 0.004, market: 'fx' },
-    { symbol: 'USDHKD', name: 'USD / Hong Kong Dollar', basePrice: 7.8212, volatility: 0.001, market: 'fx' },
-    { symbol: 'USDSGD', name: 'USD / Singapore Dollar', basePrice: 1.3412, volatility: 0.003, market: 'fx' },
-    { symbol: 'USDINR', name: 'USD / Indian Rupee', basePrice: 83.42, volatility: 0.004, market: 'fx' },
-    { symbol: 'USDKRW', name: 'USD / Korean Won', basePrice: 1325.0, volatility: 0.006, market: 'fx' },
-    { symbol: 'USDBRL', name: 'USD / Brazilian Real', basePrice: 4.982, volatility: 0.010, market: 'fx' },
+    { symbol: 'EURUSD', name: '欧元/美元', basePrice: 1.0842, volatility: 0.003, market: 'fx' },
+    { symbol: 'GBPUSD', name: '英镑/美元', basePrice: 1.2634, volatility: 0.004, market: 'fx' },
+    { symbol: 'USDJPY', name: '美元/日元', basePrice: 149.82, volatility: 0.005, market: 'fx' },
+    { symbol: 'AUDUSD', name: '澳元/美元', basePrice: 0.6521, volatility: 0.005, market: 'fx' },
+    { symbol: 'USDCNH', name: '美元/离岸人民币', basePrice: 7.2415, volatility: 0.002, market: 'fx' },
+    { symbol: 'USDCAD', name: '美元/加元', basePrice: 1.3612, volatility: 0.004, market: 'fx' },
+    { symbol: 'USDCHF', name: '美元/瑞郎', basePrice: 0.8942, volatility: 0.003, market: 'fx' },
+    { symbol: 'NZDUSD', name: '纽元/美元', basePrice: 0.6012, volatility: 0.005, market: 'fx' },
+    { symbol: 'USDHKD', name: '美元/港币', basePrice: 7.8212, volatility: 0.001, market: 'fx' },
+    { symbol: 'GBPJPY', name: '英镑/日元', basePrice: 189.32, volatility: 0.007, market: 'fx' },
   ],
+
   cn: [
-    { symbol: '1A0001', name: '上证指数', basePrice: 3089.26, volatility: 0.012, market: 'cn' },
-    { symbol: '510300', name: '沪深300ETF', basePrice: 3.892, volatility: 0.012, market: 'cn' },
-    { symbol: '159915', name: '创业板ETF', basePrice: 1.624, volatility: 0.018, market: 'cn' },
-    { symbol: '512500', name: '中证500ETF', basePrice: 5.218, volatility: 0.014, market: 'cn' },
-    { symbol: '588000', name: '科创50ETF', basePrice: 0.892, volatility: 0.020, market: 'cn' },
-    { symbol: '000001', name: '平安银行', basePrice: 10.82, volatility: 0.020, market: 'cn' },
-    { symbol: '000002', name: '万科A', basePrice: 8.42, volatility: 0.025, market: 'cn' },
-    { symbol: '000333', name: '美的集团', basePrice: 52.18, volatility: 0.018, market: 'cn' },
-    { symbol: '000651', name: '格力电器', basePrice: 38.92, volatility: 0.016, market: 'cn' },
-    { symbol: '000858', name: '五粮液', basePrice: 148.52, volatility: 0.015, market: 'cn' },
-    { symbol: '600000', name: '浦发银行', basePrice: 9.82, volatility: 0.018, market: 'cn' },
-    { symbol: '600036', name: '招商银行', basePrice: 38.42, volatility: 0.015, market: 'cn' },
-    { symbol: '600519', name: '贵州茅台', basePrice: 1682.0, volatility: 0.012, market: 'cn' },
-    { symbol: '600900', name: '长江电力', basePrice: 28.92, volatility: 0.010, market: 'cn' },
-    { symbol: '601318', name: '中国平安', basePrice: 48.82, volatility: 0.016, market: 'cn' },
-    { symbol: '601398', name: '工商银行', basePrice: 6.42, volatility: 0.012, market: 'cn' },
-    { symbol: '601857', name: '中国石油', basePrice: 8.92, volatility: 0.014, market: 'cn' },
-    { symbol: '603288', name: '海天味业', basePrice: 42.18, volatility: 0.018, market: 'cn' },
-    { symbol: '688981', name: '中芯国际', basePrice: 68.42, volatility: 0.028, market: 'cn' },
-    { symbol: '300750', name: '宁德时代', basePrice: 198.42, volatility: 0.025, market: 'cn' },
+    // --- 指数 & ETF ---
+    { symbol: '1A0001', name: '上证指数', basePrice: 3089.26, volatility: 0.012, market: 'cn', category: 'Index' },
+    { symbol: '399001', name: '深证成指', basePrice: 9512.42, volatility: 0.015, market: 'cn', category: 'Index' },
+    { symbol: '399006', name: '创业板指', basePrice: 1862.15, volatility: 0.020, market: 'cn', category: 'Index' },
+    { symbol: '510300', name: '沪深300ETF', basePrice: 3.892, volatility: 0.012, market: 'cn', category: 'ETF' },
+    { symbol: '159915', name: '创业板ETF', basePrice: 1.624, volatility: 0.018, market: 'cn', category: 'ETF' },
+    { symbol: '588000', name: '科创50ETF', basePrice: 0.892, volatility: 0.022, market: 'cn', category: 'ETF' },
+    // --- 蓝筹 & 龙头 ---
+    { symbol: '600519', name: '贵州茅台', basePrice: 1682.0, volatility: 0.012, market: 'cn', category: 'Main' },
+    { symbol: '601318', name: '中国平安', basePrice: 48.82, volatility: 0.016, market: 'cn', category: 'Main' },
+    { symbol: '000001', name: '平安银行', basePrice: 10.82, volatility: 0.020, market: 'cn', category: 'Main' },
+    { symbol: '000333', name: '美的集团', basePrice: 52.18, volatility: 0.018, market: 'cn', category: 'Main' },
+    { symbol: '000858', name: '五粮液', basePrice: 148.52, volatility: 0.015, market: 'cn', category: 'Main' },
+    { symbol: '300750', name: '宁德时代', basePrice: 198.42, volatility: 0.025, market: 'cn', category: 'ChiNext' },
+    { symbol: '688981', name: '中芯国际', basePrice: 68.42, volatility: 0.028, market: 'cn', category: 'STAR' },
+    { symbol: '600900', name: '长江电力', basePrice: 28.92, volatility: 0.010, market: 'cn', category: 'Main' },
+    { symbol: '601398', name: '工商银行', basePrice: 6.42, volatility: 0.012, market: 'cn', category: 'Main' },
+    { symbol: '899050', name: '北证50指数', basePrice: 850.42, volatility: 0.025, market: 'cn', category: 'Index' },
   ],
+
   hk: [
-    { symbol: 'HSI', name: '恒生指数', basePrice: 19842.5, volatility: 0.015, market: 'hk' },
-    { symbol: 'HSTECH', name: '恒生科技指数', basePrice: 4218.3, volatility: 0.022, market: 'hk' },
+    { symbol: 'HSI', name: '恒生指数', basePrice: 19842.5, volatility: 0.015, market: 'hk', category: 'Index' },
+    { symbol: 'HSTECH', name: '恒生科技', basePrice: 4218.3, volatility: 0.022, market: 'hk', category: 'Index' },
     { symbol: '0700.HK', name: '腾讯控股', basePrice: 382.4, volatility: 0.018, market: 'hk' },
     { symbol: '9988.HK', name: '阿里巴巴-SW', basePrice: 84.65, volatility: 0.022, market: 'hk' },
     { symbol: '3690.HK', name: '美团-W', basePrice: 148.2, volatility: 0.025, market: 'hk' },
-    { symbol: '0005.HK', name: '汇丰控股', basePrice: 68.45, volatility: 0.015, market: 'hk' },
-    { symbol: '0388.HK', name: '香港交易所', basePrice: 318.6, volatility: 0.018, market: 'hk' },
-    { symbol: '0941.HK', name: '中国移动', basePrice: 82.15, volatility: 0.012, market: 'hk' },
-    { symbol: '1299.HK', name: '友邦保险', basePrice: 58.25, volatility: 0.016, market: 'hk' },
-    { symbol: '2318.HK', name: '中国平安', basePrice: 42.85, volatility: 0.018, market: 'hk' },
-    { symbol: '2382.HK', name: '舜宇光学科技', basePrice: 68.95, volatility: 0.028, market: 'hk' },
-    { symbol: '9618.HK', name: '京东集团-SW', basePrice: 128.5, volatility: 0.025, market: 'hk' },
-    { symbol: '9999.HK', name: '网易-S', basePrice: 148.8, volatility: 0.022, market: 'hk' },
     { symbol: '1810.HK', name: '小米集团-W', basePrice: 22.85, volatility: 0.030, market: 'hk' },
-    { symbol: '0175.HK', name: '吉利汽车', basePrice: 10.82, volatility: 0.028, market: 'hk' },
-    { symbol: '0883.HK', name: '中国海洋石油', basePrice: 18.42, volatility: 0.018, market: 'hk' },
-    { symbol: '1398.HK', name: '工商银行', basePrice: 5.42, volatility: 0.012, market: 'hk' },
-    { symbol: '3988.HK', name: '中国银行', basePrice: 4.12, volatility: 0.012, market: 'hk' },
-    { symbol: '2628.HK', name: '中国人寿', basePrice: 14.82, volatility: 0.016, market: 'hk' },
-    { symbol: '0027.HK', name: '银河娱乐', basePrice: 28.45, volatility: 0.025, market: 'hk' },
+    { symbol: '0941.HK', name: '中国移动', basePrice: 82.15, volatility: 0.012, market: 'hk' },
+    { symbol: '2318.HK', name: '中国平安(HK)', basePrice: 42.85, volatility: 0.018, market: 'hk' },
   ],
+
   us: [
-    { symbol: 'SPY', name: 'S&P 500 ETF', basePrice: 589.42, volatility: 0.010, market: 'us' },
-    { symbol: 'QQQ', name: 'Nasdaq 100 ETF', basePrice: 512.38, volatility: 0.013, market: 'us' },
-    { symbol: 'AAPL', name: 'Apple Inc.', basePrice: 228.52, volatility: 0.015, market: 'us' },
-    { symbol: 'MSFT', name: 'Microsoft Corp.', basePrice: 415.28, volatility: 0.014, market: 'us' },
-    { symbol: 'NVDA', name: 'NVIDIA Corp.', basePrice: 875.42, volatility: 0.028, market: 'us' },
-    { symbol: 'AMZN', name: 'Amazon.com Inc.', basePrice: 198.42, volatility: 0.018, market: 'us' },
-    { symbol: 'GOOGL', name: 'Alphabet Inc.', basePrice: 178.52, volatility: 0.016, market: 'us' },
-    { symbol: 'META', name: 'Meta Platforms Inc.', basePrice: 548.32, volatility: 0.022, market: 'us' },
-    { symbol: 'TSLA', name: 'Tesla Inc.', basePrice: 248.52, volatility: 0.040, market: 'us' },
-    { symbol: 'BRK-B', name: 'Berkshire Hathaway B', basePrice: 448.82, volatility: 0.010, market: 'us' },
-    { symbol: 'JPM', name: 'JPMorgan Chase', basePrice: 218.42, volatility: 0.016, market: 'us' },
-    { symbol: 'V', name: 'Visa Inc.', basePrice: 298.52, volatility: 0.012, market: 'us' },
-    { symbol: 'JNJ', name: 'Johnson & Johnson', basePrice: 158.42, volatility: 0.010, market: 'us' },
-    { symbol: 'WMT', name: 'Walmart Inc.', basePrice: 88.52, volatility: 0.012, market: 'us' },
-    { symbol: 'XOM', name: 'Exxon Mobil Corp.', basePrice: 118.42, volatility: 0.016, market: 'us' },
-    { symbol: 'DIA', name: 'Dow Jones ETF', basePrice: 428.52, volatility: 0.009, market: 'us' },
-    { symbol: 'IWM', name: 'Russell 2000 ETF', basePrice: 228.52, volatility: 0.014, market: 'us' },
-    { symbol: 'GLD', name: 'Gold ETF', basePrice: 248.52, volatility: 0.008, market: 'us' },
-    { symbol: 'AMD', name: 'Advanced Micro Devices', basePrice: 168.42, volatility: 0.030, market: 'us' },
-    { symbol: 'BABA', name: 'Alibaba Group ADR', basePrice: 88.52, volatility: 0.025, market: 'us' },
+    { symbol: 'SPY', name: '标普500 ETF', basePrice: 589.42, volatility: 0.010, market: 'us', category: 'Index' },
+    { symbol: 'QQQ', name: '纳指100 ETF', basePrice: 512.38, volatility: 0.013, market: 'us', category: 'Index' },
+    { symbol: 'AAPL', name: '苹果', basePrice: 228.52, volatility: 0.015, market: 'us' },
+    { symbol: 'MSFT', name: '微软', basePrice: 415.28, volatility: 0.014, market: 'us' },
+    { symbol: 'NVDA', name: '英伟达', basePrice: 875.42, volatility: 0.028, market: 'us' },
+    { symbol: 'TSLA', name: '特斯拉', basePrice: 248.52, volatility: 0.040, market: 'us' },
+    { symbol: 'AMZN', name: '亚马逊', basePrice: 198.42, volatility: 0.018, market: 'us' },
+    { symbol: 'BABA', name: '阿里巴巴(US)', basePrice: 88.52, volatility: 0.025, market: 'us' },
   ],
+
   crypto: [
-    { symbol: 'BTCUSDT', name: 'Bitcoin / USDT', basePrice: 94820.0, volatility: 0.030, market: 'crypto' },
-    { symbol: 'ETHUSDT', name: 'Ethereum / USDT', basePrice: 3284.5, volatility: 0.035, market: 'crypto' },
-    { symbol: 'SOLUSDT', name: 'Solana / USDT', basePrice: 198.42, volatility: 0.045, market: 'crypto' },
-    { symbol: 'BNBUSDT', name: 'BNB / USDT', basePrice: 652.8, volatility: 0.028, market: 'crypto' },
-    { symbol: 'XRPUSDT', name: 'XRP / USDT', basePrice: 2.485, volatility: 0.040, market: 'crypto' },
-    { symbol: 'ADAUSDT', name: 'Cardano / USDT', basePrice: 0.582, volatility: 0.050, market: 'crypto' },
-    { symbol: 'DOGEUSDT', name: 'Dogecoin / USDT', basePrice: 0.182, volatility: 0.060, market: 'crypto' },
-    { symbol: 'AVAXUSDT', name: 'Avalanche / USDT', basePrice: 38.42, volatility: 0.055, market: 'crypto' },
-    { symbol: 'DOTUSDT', name: 'Polkadot / USDT', basePrice: 8.42, volatility: 0.050, market: 'crypto' },
-    { symbol: 'LINKUSDT', name: 'Chainlink / USDT', basePrice: 18.42, volatility: 0.048, market: 'crypto' },
-    { symbol: 'MATICUSDT', name: 'Polygon / USDT', basePrice: 0.982, volatility: 0.055, market: 'crypto' },
-    { symbol: 'UNIUSDT', name: 'Uniswap / USDT', basePrice: 12.42, volatility: 0.052, market: 'crypto' },
-    { symbol: 'ATOMUSDT', name: 'Cosmos / USDT', basePrice: 8.82, volatility: 0.050, market: 'crypto' },
-    { symbol: 'LTCUSDT', name: 'Litecoin / USDT', basePrice: 98.42, volatility: 0.035, market: 'crypto' },
-    { symbol: 'ETCUSDT', name: 'Ethereum Classic / USDT', basePrice: 28.42, volatility: 0.045, market: 'crypto' },
-    { symbol: 'FILUSDT', name: 'Filecoin / USDT', basePrice: 6.82, volatility: 0.060, market: 'crypto' },
-    { symbol: 'NEARUSDT', name: 'NEAR Protocol / USDT', basePrice: 5.42, volatility: 0.055, market: 'crypto' },
-    { symbol: 'APTUSDT', name: 'Aptos / USDT', basePrice: 8.82, volatility: 0.058, market: 'crypto' },
-    { symbol: 'ARBUSDT', name: 'Arbitrum / USDT', basePrice: 1.42, volatility: 0.060, market: 'crypto' },
-    { symbol: 'OPUSDT', name: 'Optimism / USDT', basePrice: 2.42, volatility: 0.060, market: 'crypto' },
+    { symbol: 'BTCUSDT', name: '比特币', basePrice: 94820.0, volatility: 0.030, market: 'crypto' },
+    { symbol: 'ETHUSDT', name: '以太坊', basePrice: 3284.5, volatility: 0.035, market: 'crypto' },
+    { symbol: 'SOLUSDT', name: 'Solana', basePrice: 198.42, volatility: 0.045, market: 'crypto' },
+    { symbol: 'BNBUSDT', name: '币安币', basePrice: 652.8, volatility: 0.028, market: 'crypto' },
+    { symbol: 'XRPUSDT', name: '瑞波币', basePrice: 2.485, volatility: 0.040, market: 'crypto' },
+    { symbol: 'DOGEUSDT', name: '狗狗币', basePrice: 0.182, volatility: 0.060, market: 'crypto' },
   ],
+
   commodities: [
-    { symbol: 'WTIUSD', name: 'WTI Crude Oil', basePrice: 72.84, volatility: 0.018, market: 'commodities' },
-    { symbol: 'BRTUSD', name: 'Brent Crude Oil', basePrice: 76.92, volatility: 0.017, market: 'commodities' },
-    { symbol: 'XAUUSD', name: 'Gold Spot', basePrice: 2928.5, volatility: 0.008, market: 'commodities' },
-    { symbol: 'HGUSD', name: 'Copper Futures', basePrice: 4.285, volatility: 0.015, market: 'commodities' },
-    { symbol: 'SOYUSD', name: 'Soybean Futures', basePrice: 985.4, volatility: 0.012, market: 'commodities' },
-    { symbol: 'XAGUSD', name: 'Silver Spot', basePrice: 32.42, volatility: 0.020, market: 'commodities' },
-    { symbol: 'XPTUSD', name: 'Platinum Spot', basePrice: 982.5, volatility: 0.018, market: 'commodities' },
-    { symbol: 'XPDUSD', name: 'Palladium Spot', basePrice: 1082.5, volatility: 0.022, market: 'commodities' },
-    { symbol: 'NGUSD', name: 'Natural Gas Futures', basePrice: 2.842, volatility: 0.030, market: 'commodities' },
-    { symbol: 'HHUSD', name: 'Heating Oil Futures', basePrice: 2.482, volatility: 0.020, market: 'commodities' },
-    { symbol: 'RBUSD', name: 'RBOB Gasoline Futures', basePrice: 2.282, volatility: 0.022, market: 'commodities' },
-    { symbol: 'CORNUSD', name: 'Corn Futures', basePrice: 448.5, volatility: 0.014, market: 'commodities' },
-    { symbol: 'WHUSD', name: 'Wheat Futures', basePrice: 548.5, volatility: 0.016, market: 'commodities' },
-    { symbol: 'CTUSD', name: 'Cotton Futures', basePrice: 82.42, volatility: 0.018, market: 'commodities' },
-    { symbol: 'CCUSD', name: 'Cocoa Futures', basePrice: 9842.5, volatility: 0.025, market: 'commodities' },
-    { symbol: 'KCUSD', name: 'Coffee Futures', basePrice: 248.5, volatility: 0.022, market: 'commodities' },
-    { symbol: 'SBUSD', name: 'Sugar Futures', basePrice: 18.42, volatility: 0.020, market: 'commodities' },
-    { symbol: 'LEUSD', name: 'Live Cattle Futures', basePrice: 188.5, volatility: 0.012, market: 'commodities' },
-    { symbol: 'HEUSD', name: 'Lean Hogs Futures', basePrice: 88.42, volatility: 0.018, market: 'commodities' },
-    { symbol: 'ALUSD', name: 'Aluminum Futures', basePrice: 2282.5, volatility: 0.014, market: 'commodities' },
+    { symbol: 'XAUUSD', name: '现货黄金', basePrice: 2928.5, volatility: 0.008, market: 'commodities' },
+    { symbol: 'WTIUSD', name: '美原油', basePrice: 72.84, volatility: 0.018, market: 'commodities' },
+    { symbol: 'BRTUSD', name: '布伦特原油', basePrice: 76.92, volatility: 0.017, market: 'commodities' },
+    { symbol: 'XAGUSD', name: '现货白银', basePrice: 32.42, volatility: 0.020, market: 'commodities' },
+    { symbol: 'NGUSD', name: '天然气', basePrice: 2.842, volatility: 0.030, market: 'commodities' },
+    { symbol: 'HGUSD', name: '铜期货', basePrice: 4.285, volatility: 0.015, market: 'commodities' },
   ],
 };
 
-// Default symbols shown on startup (first 5 per market)
+// ============================================================
+// 2. Logic Helpers (关键逻辑修正)
+// ============================================================
+
+/**
+ * 转换 A 股代码为 API 可识别的后缀格式 (sh/sz/bj)
+ */
+export function formatCNSymbol(symbol: string): string {
+  if (symbol === '1A0001') return 'sh000001';
+  if (/^(60|68|51|58|11|000|000)/.test(symbol)) return `sh${symbol}`;
+  if (/^(00|30|15|399|12|18)/.test(symbol)) return `sz${symbol}`;
+  if (/^(8|4)/.test(symbol)) return `bj${symbol}`;
+  return `sh${symbol}`;
+}
+
+/**
+ * 获取默认启动展示的符号
+ */
 export const DEFAULT_SYMBOLS: Record<MarketType, string[]> = {
-  fx: ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'USDCNH'],
-  cn: ['1A0001', '510300', '159915', '512500', '588000'],
-  hk: ['HSI', 'HSTECH', '0700.HK', '9988.HK', '3690.HK'],
-  us: ['SPY', 'QQQ', 'AAPL', 'MSFT', 'NVDA'],
-  crypto: ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT'],
-  commodities: ['WTIUSD', 'BRTUSD', 'XAUUSD', 'HGUSD', 'SOYUSD'],
+  fx: ['EURUSD', 'GBPUSD', 'USDJPY'],
+  cn: ['1A0001', '510300', '300750'],
+  hk: ['HSI', 'HSTECH', '0700.HK'],
+  us: ['SPY', 'AAPL', 'NVDA'],
+  crypto: ['BTCUSDT', 'ETHUSDT'],
+  commodities: ['XAUUSD', 'WTIUSD'],
 };
+
+/**
+ * 展平全量列表方便搜索
+ */
+export const ALL_SYMBOLS_FLAT = Object.values(ALL_MARKET_SYMBOLS).flat();
+
+/**
+ * 根据代码快速获取元数据信息
+ */
+export function getSymbolInfo(symbol: string): SymbolInfo | undefined {
+  return ALL_SYMBOLS_FLAT.find(s => s.symbol === symbol);
+}
